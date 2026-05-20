@@ -5,7 +5,7 @@ networks:
 services:
   instagram-etl:
     container_name: instagram-etl-prod
-    image: gdelapierre/instagram-etl:1.0.0
+    image: gdelapierre/instagram-etl:1.0.1
     hostname: instagram-etl-prod
     environment:
       # STANDARDS §1 logging
@@ -17,6 +17,7 @@ services:
       # Instagram Graph API
       - IG_ACCESS_TOKEN=${IG_ACCESS_TOKEN}
       - IG_USER_ID=${IG_USER_ID}
+      - IG_API_BASE_URL=${IG_API_BASE_URL:-https://graph.instagram.com}
       - IG_GRAPH_API_VERSION=${IG_GRAPH_API_VERSION:-v23.0}
       - IG_TIMEZONE=${IG_TIMEZONE:-Australia/Brisbane}
       - IG_API_MAX_RETRIES=${IG_API_MAX_RETRIES:-8}
