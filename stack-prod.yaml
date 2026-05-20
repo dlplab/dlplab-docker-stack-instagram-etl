@@ -5,12 +5,12 @@ networks:
 services:
   instagram-etl:
     container_name: instagram-etl-prod
-    image: gdelapierre/instagram-etl:0.1.0
+    image: gdelapierre/instagram-etl:1.0.0
     hostname: instagram-etl-prod
     environment:
       # STANDARDS §1 logging
       - SERVICE_NAME=instagram-etl
-      - SERVICE_VERSION=${SERVICE_VERSION:-0.1.0}
+      - SERVICE_VERSION=${SERVICE_VERSION:-1.0.0}
       - APP_ENV=prod
       - LOG_HOST=instagram-etl-prod
       - LOG_LEVEL=${LOG_LEVEL:-info}
