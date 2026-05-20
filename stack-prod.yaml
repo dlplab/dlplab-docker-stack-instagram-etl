@@ -5,7 +5,7 @@ networks:
 services:
   instagram-etl:
     container_name: instagram-etl-prod
-    image: gdelapierre/instagram-etl:1.0.3
+    image: gdelapierre/instagram-etl:1.0.4
     hostname: instagram-etl-prod
     environment:
       # STANDARDS §1 logging
