@@ -1,0 +1,50 @@
+networks:
+  instagram-prod:
+    driver: bridge
+
+services:
+  instagram-etl:
+    container_name: instagram-etl-prod
+    image: gdelapierre/instagram-etl:0.1.0
+    hostname: instagram-etl-prod
+    environment:
+      # STANDARDS §1 logging
+      - SERVICE_NAME=instagram-etl
+      - SERVICE_VERSION=${SERVICE_VERSION:-0.1.0}
+      - APP_ENV=prod
+      - LOG_HOST=instagram-etl-prod
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      # Instagram Graph API
+      - IG_ACCESS_TOKEN=${IG_ACCESS_TOKEN}
+      - IG_USER_ID=${IG_USER_ID}
+      - IG_GRAPH_API_VERSION=${IG_GRAPH_API_VERSION:-v23.0}
+      - IG_TIMEZONE=${IG_TIMEZONE:-Australia/Brisbane}
+      - IG_API_MAX_RETRIES=${IG_API_MAX_RETRIES:-8}
+      - IG_API_RETRY_DELAY_BASE=${IG_API_RETRY_DELAY_BASE:-2000}
+      # PostgreSQL
+      - PGHOST=${PGHOST}
+      - PGPORT=${PGPORT:-5000}
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGSSLMODE=${PGSSLMODE:-require}
+      - PGSSL_REJECT_UNAUTHORIZED=${PGSSL_REJECT_UNAUTHORIZED:-true}
+      - PGSSLROOTCERT=${PGSSLROOTCERT}
+      # Database initialisation
+      - RUN_DB_INIT=${RUN_DB_INIT:-false}
+      - DB_ADMIN_USER=${DB_ADMIN_USER:-dbadmin}
+      - DB_ADMIN_PASSWORD=${DB_ADMIN_PASSWORD}
+      - DB_ADMIN_DB=${DB_ADMIN_DB:-postgres}
+      - DB_LOADER_PASSWORD=${DB_LOADER_PASSWORD}
+      # ETL scheduler
+      - ETL_SCHEDULE=${ETL_SCHEDULE:-0 2 * * *}
+      - STORY_SCHEDULE=${STORY_SCHEDULE:-0 * * * *}
+      - BACKFILL_MONTHS=${BACKFILL_MONTHS:-12}
+      - RUN_ON_STARTUP=${RUN_ON_STARTUP:-true}
+      - ETL_PORT=3003
+      - TZ=${TZ:-Australia/Brisbane}
+    volumes:
+      - /data/compose/cacerts/dlplab-root-ca.pem:/etc/ssl/dlplab-root-ca.pem:ro
+    restart: unless-stopped
+    networks:
+      - instagram-prod
