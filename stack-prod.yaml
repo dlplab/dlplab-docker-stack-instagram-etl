@@ -5,7 +5,7 @@ networks:
 services:
   instagram-etl:
     container_name: instagram-etl-prod
-    image: gdelapierre/instagram-etl:1.0.7
+    image: gdelapierre/instagram-etl:1.1.0
     hostname: instagram-etl-prod
     environment:
       # STANDARDS §1 logging
@@ -18,7 +18,7 @@ services:
       - IG_ACCESS_TOKEN=${IG_ACCESS_TOKEN}
       - IG_USER_ID=${IG_USER_ID}
       - IG_API_BASE_URL=${IG_API_BASE_URL:-https://graph.instagram.com}
-      - IG_GRAPH_API_VERSION=${IG_GRAPH_API_VERSION:-v23.0}
+      - IG_GRAPH_API_VERSION=${IG_GRAPH_API_VERSION:-v25.0}
       - IG_TIMEZONE=${IG_TIMEZONE:-Australia/Brisbane}
       - IG_API_MAX_RETRIES=${IG_API_MAX_RETRIES:-8}
       - IG_API_RETRY_DELAY_BASE=${IG_API_RETRY_DELAY_BASE:-2000}
@@ -40,7 +40,11 @@ services:
       # ETL scheduler
       - ETL_SCHEDULE=${ETL_SCHEDULE:-0 2 * * *}
       - STORY_SCHEDULE=${STORY_SCHEDULE:-0 * * * *}
+      - SNAPSHOT_SCHEDULE=${SNAPSHOT_SCHEDULE:-0 1 * * *}
       - BACKFILL_MONTHS=${BACKFILL_MONTHS:-12}
+      # One-shot daily-totals backfill on container start. Default 0 (off).
+      # Set to e.g. 180 in the env file for a single deploy, then revert to 0.
+      - BACKFILL_DAILY_DAYS=${BACKFILL_DAILY_DAYS:-0}
       - RUN_ON_STARTUP=${RUN_ON_STARTUP:-true}
       - ETL_PORT=3003
       - TZ=${TZ:-Australia/Brisbane}
